@@ -49,3 +49,6 @@ class User(AbstractBaseUser, PermissionsMixin):
   
   def __str__(self):
     return self.email
+  
+  def validate_email(self):
+    return len(self.email) <= 255

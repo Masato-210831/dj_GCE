@@ -1,3 +1,5 @@
+from django.urls import reverse
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.contrib.auth import login, logout, authenticate
@@ -22,15 +24,15 @@ def index(request):
   
 def login_view(request):
   if request.method == "GET":
-    return render(request, "signup/login.html")
+    return render(request, "signup/home.html")
   
   email = request.POST["email"]
   password = request.POST['password']
   user = authenticate(request, email=email, password=password)
   login(request, user)
-  return render(request, "signup/login.html")
+  return HttpResponseRedirect(reverse("blog:article"))
+  
 
 def logout_view(request):
   logout(request)
-  return render(request, "signup/login.html")
-
+  return HttpResponseRedirect(reverse("blog:article"))

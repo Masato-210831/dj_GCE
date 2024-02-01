@@ -5,7 +5,13 @@ from .forms import ArticleCreateForm
 
 
 def article_view(request):
-  articles = Article.objects.all().order_by("-created_at")
+  if request.method == "GET":
+    articles = Article.objects.all().order_by("-created_at")
+  else:
+    search_text = request.POST['search']
+    articles = Article.objects.filter(
+      title__contains=search_text
+    ).order_by("-created_at")
   context = {"articles":articles}
   return render(request, "blog/article.html", context)
 
@@ -21,7 +27,6 @@ def create(request):
     return render(request, "blog/create.html", context)
   else:
     form = ArticleCreateForm(request.POST)
-    print( "before form: ",form)
     if form.is_valid():
       article = form.save(commit=False)
       article.author = request.user
